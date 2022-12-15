@@ -1,0 +1,118 @@
+{% extends "employee_information/base.html" %} {% block pageContent %}
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Arizalar List</h4>
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="15%">   
+                    <col width="5%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="5%">
+                    <col width="5%">
+                    <col width="5%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center py-1">#</th>
+                        <th class="text-center py-1">First Name</th>
+                        <th class="text-center py-1">Last Name</th>
+                        <th class="text-center py-1">Phone</th>
+                        <th class="text-center py-1">Dukon</th>
+                        <th class="text-center py-1">Muddat</th>
+                        <th class="text-center py-1">Birthday</th>
+                        <th class="text-center py-1">Pasport Seria</th>
+                        <th class="text-center py-1">Pasport Photo</th>
+                        <th class="text-center py-1">Status</th>
+                        <th class="text-center py-1">Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for employee in Ariza_my %}
+                    <tr>
+                        <td class="px-2 py-1 text-center">{{ employee.id }}</td>
+                        <td class="px-2 py-1 text-center">{{ employee.first_name }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.last_name }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.tel }}</td>
+                        <td class="px-2 py-1 text-center">{{ employee.parent }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.type_muddat }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.data_user }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.pasport_seria }}</td>
+                        <td class="px-2 py-1 text-center"><a href="{% if employee.pasport_photo.url %}{{ employee.pasport_photo.url }}{% endif %}" download><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+                          </svg></a></td>
+                        <td class="px-2 py-1 text-start">{{ employee.status }}</td>
+
+                        {% if employee.status != 'Отказано' and employee.status != 'Отменено' and employee.status != 'ok' %}
+                        <td class="px-2 py-1 text-center">
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded edit-data" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">visibility</i>
+                            </button>
+                        </td>
+                        {% endif %}
+                        {% if employee.status == 'ok' %}
+                        <td class="px-2 py-1 text-center">
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-data" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">visibility</i>
+                            </button>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %} {% block ScriptBlock %}
+<script>
+    $(function() {
+        $('.edit-data').click(function() {
+            uni_modal("Edit Employee", "{% url 'manage_employees-page-my' %}?id=" + $(this).attr('data-id'), 'modal-lg')
+        })
+        $('.view-data').click(function() {
+            uni_modal("Employee Details", "{% url 'view-employee-page' %}?id=" + $(this).attr('data-id'), 'mid-large')
+        })
+    })
+
+    function delete_employee($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'delete-employee' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err)
+                alert_toast("An error occured.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("An error occured.", 'error');
+                    end_loader();
+                }
+            }
+        })
+    }
+</script>
+{% endblock ScriptBlock %}

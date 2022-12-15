@@ -1,0 +1,82 @@
+{% load humanize %}
+<style>
+    #uni_modal .modal-footer {
+        display: none;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <dl>
+                <dt class="mdc-typography mdc-theme--primary">Ismi</dt>
+                <dd class="ps-3 fw-bolder">{% if employee.first_name and employee.last_name %}{{ employee.first_name }} {{ employee.last_name }}{% endif %}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Telefon</dt>
+                <dd class="ps-3 fw-bolder">{% if employee.tel %}{{ employee.tel }}{% endif %}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Sana</dt>
+                <dd class="ps-3 fw-bolder">{% if employee.date_added %}{{ employee.date_added }}{% endif %}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Muddati</dt>
+                <dd class="ps-3 fw-bolder">{% if employee.type_muddat %}{{ employee.type_muddat }}{% endif %}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Summa Limet</dt>
+                <dd class="ps-3 fw-bolder">{% if employee.summa_limet %}{{ employee.summa_limet }}{% endif %}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Maxshulot Summasi</dt>
+                <dd class="ps-3 fw-bolder">{% if employee.maxshulot_summasi %}{{ employee.maxshulot_summasi }}{% endif %}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Yechiladigon Summa</dt>
+                <dd class="ps-3 fw-bolder">{% if employee.yechiladigon_summa %}{{ employee.yechiladigon_summa }}{% endif %}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Oylik Tolov</dt>
+                <dd class="ps-3 fw-bolder">{% if employee.oylik_tolov %}{{ employee.oylik_tolov }}{% endif %}</dd>
+                
+            </dl>
+        </div>
+        <div class="col-sm-6">
+            <dl>
+                <dt class="mdc-typography mdc-theme--primary">Pasport Seria</dt>
+                <dd class="ps-3 fw-bolder">{% if employee.pasport_seria %}{{ employee.pasport_seria }}{% endif %}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Tug'ilgan Sana</dt>
+                <dd class="ps-3 fw-bolder">{% if employee.data_user %}{{ employee.data_user }}{% endif %}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Pasport rasmi</dt>
+                {% if employee.pasport_photo %}
+                <dd class="ps-3 fw-bolder"><a href="{% if employee.pasport_photo.url %}{{ employee.pasport_photo.url }}{% endif %}" download><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                    <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+                  </svg>Yuklab olish</a></dd>
+                {% endif %}
+                <dt class="mdc-typography mdc-theme--primary">Shartnoma 1</dt>
+                {% if employee.shartnoma_asli1 %}
+                <dd class="ps-3 fw-bolder"><a href="{% if employee.shartnoma_asli1.url %}{{ employee.shartnoma_asli1.url }}{% endif %}" download><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                    <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+                  </svg>Yuklab olish</a></dd>
+                {% endif %}
+                <dt class="mdc-typography mdc-theme--primary">Shartnoma 2</dt>
+                {% if employee.shartnoma_asli2 %}
+                <dd class="ps-3 fw-bolder"><a href="{% if employee.shartnoma_asli2.url %}{{ employee.shartnoma_asli2.url }}{% endif %}" download><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                    <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+                  </svg>Yuklab olish</a></dd>
+                {% endif %}
+                <dt class="mdc-typography mdc-theme--primary">Selfi rasm</dt>
+                {% if employee.selfe_photo %}
+                <dd class="ps-3 fw-bolder"><a href="{% if employee.selfe_photo.url %}{{ employee.selfe_photo.url }}{% endif %}" download><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                    <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+                  </svg>Yuklab olish</a></dd>
+                {% endif %}
+                <dt class="mdc-typography mdc-theme--primary">Shartnoma 1 imzolanga</dt>
+                {% if employee.shantnoma_imzo1 %}
+                <dd class="ps-3 fw-bolder"><a href="{% if employee.shantnoma_imzo1.url %}{{ employee.shantnoma_imzo1.url }}{% endif %}" download><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                    <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+                  </svg>Yuklab olish</a></dd>
+                {% endif %}
+                <dt class="mdc-typography mdc-theme--primary">Shartnoma 2 imzolanga</dt>
+                {% if employee.shantnoma_imzo2 %}
+                <dd class="ps-3 fw-bolder"><a href="{% if employee.shantnoma_imzo2.url %}{{ employee.shantnoma_imzo2.url }}{% endif %}" download><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                    <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+                  </svg>Yuklab olish</a></dd>
+                {% endif %}
+            
+            
+            
+            </dl>
+        </div>
+    </div>
+    <div class="clear-fix py-3"></div>
+    <div class="d-flex w-100 align-items-center justify-content-end">
+        <button class="btn btn-default border btn-sm rounded-0 d-flex align-items-center" type="button" data-bs-dismiss="modal"><i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">close</i> Close</button>
+    </div>
+</div>

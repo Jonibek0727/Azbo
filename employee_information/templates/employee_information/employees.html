@@ -1,0 +1,623 @@
+{% extends "employee_information/base.html" %} {% block pageContent %}
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Arizalar </h4>
+            
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" onclick="myFunction(1)"><span> Все</span></button>
+            </div>
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" onclick="myFunction(2)"><span> Новый</span></button>
+            </div>
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" onclick="myFunction(3)"><span> Рассматривается</span></button>
+            </div>
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" onclick="myFunction(4)"><span> Отказано</span></button>
+            </div>
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" onclick="myFunction(5)"><span> Оформлено</span></button>
+            </div>
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" onclick="myFunction(6)"><span> Отменено</span></button>
+            </div>
+            {% if not user.is_admin and not user.is_operator %}
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" id="create_new"><i class="material-icons mdc-button__icon">add</i><span> Add New</span></button>
+            </div>
+            {% endif %}
+        
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12" id="content_all">
+    <div class="mdc-card">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="10%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center py-1">#</th>
+                        <th class="text-center py-1">Name</th>
+                        <th class="text-center py-1">Dukon</th>
+                        <th class="text-center py-1">Muddat</th>
+                        <th class="text-center py-1">Operator</th>
+                        <th class="text-center py-1">Tel</th>
+                        <th class="text-center py-1">Data</th>
+                        <th class="text-center py-1">Status</th>
+                        <th class="text-center py-1">Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for employee in employees %}
+                    <tr>
+                        <td class="px-2 py-1 text-center">{{ employee.id }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.first_name }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.parent }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.type_muddat }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.operator }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.tel }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.date_added }}</td>
+                        <td class="px-2 py-1 text-center">
+                            
+                            <span class="badge bg-primary rounded-pill px-3">{{ employee.status }}</span> 
+                        
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-data" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">visibility</i>
+                            </button>
+                            {% if employee.status == 'Qaytish' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded update-data" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'SMS' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-sms" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Одобрено' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-summa" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-summa" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">menu</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Shartnoma' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-shartnoma" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12" id="content_new" style="display: none;">
+    <div class="mdc-card">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="10%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center py-1">#</th>
+                        <th class="text-center py-1">Name</th>
+                        <th class="text-center py-1">Dukon</th>
+                        <th class="text-center py-1">Muddat</th>
+                        <th class="text-center py-1">Operator</th>
+                        <th class="text-center py-1">Tel</th>
+                        <th class="text-center py-1">Data</th>
+                        <th class="text-center py-1">Status</th>
+                        <th class="text-center py-1">Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for employee in employee_list_new %}
+                    <tr>
+                        <td class="px-2 py-1 text-center">{{ employee.id }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.first_name }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.parent }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.type_muddat }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.operator }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.tel }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.date_added }}</td>
+                        <td class="px-2 py-1 text-center">
+                            
+                            <span class="badge bg-primary rounded-pill px-3">{{ employee.status }}</span> 
+                        
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-data" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">visibility</i>
+                            </button>
+                            {% if employee.status == 'Qaytish' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded update-data" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'SMS' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-sms" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Одобрено' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-summa" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-summa" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">menu</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Shartnoma' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-shartnoma" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12" id="content_r" style="display: none;">
+    <div class="mdc-card">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="10%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center py-1">#</th>
+                        <th class="text-center py-1">Name</th>
+                        <th class="text-center py-1">Dukon</th>
+                        <th class="text-center py-1">Muddat</th>
+                        <th class="text-center py-1">Operator</th>
+                        <th class="text-center py-1">Tel</th>
+                        <th class="text-center py-1">Data</th>
+                        <th class="text-center py-1">Status</th>
+                        <th class="text-center py-1">Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for employee in employee_list_r %}
+                    <tr>
+                        <td class="px-2 py-1 text-center">{{ employee.id }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.first_name }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.parent }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.type_muddat }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.operator }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.tel }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.date_added }}</td>
+                        <td class="px-2 py-1 text-center">
+                            
+                            <span class="badge bg-primary rounded-pill px-3">{{ employee.status }}</span> 
+                        
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-data" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">visibility</i>
+                            </button>
+                            {% if employee.status == 'Qaytish' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded update-data" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'SMS' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-sms" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Одобрено' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-summa" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-summa" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">menu</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Shartnoma' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-shartnoma" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12" id="content_ot" style="display: none;">
+    <div class="mdc-card">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="10%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center py-1">#</th>
+                        <th class="text-center py-1">Name</th>
+                        <th class="text-center py-1">Dukon</th>
+                        <th class="text-center py-1">Muddat</th>
+                        <th class="text-center py-1">Operator</th>
+                        <th class="text-center py-1">Tel</th>
+                        <th class="text-center py-1">Data</th>
+                        <th class="text-center py-1">Status</th>
+                        <th class="text-center py-1">Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for employee in employee_list_ot %}
+                    <tr>
+                        <td class="px-2 py-1 text-center">{{ employee.id }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.first_name }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.parent }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.type_muddat }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.operator }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.tel }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.date_added }}</td>
+                        <td class="px-2 py-1 text-center">
+                            
+                            <span class="badge bg-primary rounded-pill px-3">{{ employee.status }}</span> 
+                        
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-data" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">visibility</i>
+                            </button>
+                            {% if employee.status == 'Qaytish' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded update-data" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'SMS' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-sms" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Одобрено' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-summa" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-summa" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">menu</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Shartnoma' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-shartnoma" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12" id="content_of" style="display: none;">
+    <div class="mdc-card">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="10%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center py-1">#</th>
+                        <th class="text-center py-1">Name</th>
+                        <th class="text-center py-1">Dukon</th>
+                        <th class="text-center py-1">Muddat</th>
+                        <th class="text-center py-1">Operator</th>
+                        <th class="text-center py-1">Tel</th>
+                        <th class="text-center py-1">Data</th>
+                        <th class="text-center py-1">Status</th>
+                        <th class="text-center py-1">Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for employee in employee_list_of %}
+                    <tr>
+                        <td class="px-2 py-1 text-center">{{ employee.id }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.first_name }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.parent }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.type_muddat }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.operator }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.tel }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.date_added }}</td>
+                        <td class="px-2 py-1 text-center">
+                            
+                            <span class="badge bg-primary rounded-pill px-3">{{ employee.status }}</span> 
+                        
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-data" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">visibility</i>
+                            </button>
+                            {% if employee.status == 'Qaytish' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded update-data" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'SMS' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-sms" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Одобрено' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-summa" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-summa" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">menu</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Shartnoma' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-shartnoma" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12" id="content_otm" style="display: none;">
+    <div class="mdc-card">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="10%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center py-1">#</th>
+                        <th class="text-center py-1">Name</th>
+                        <th class="text-center py-1">Dukon</th>
+                        <th class="text-center py-1">Muddat</th>
+                        <th class="text-center py-1">Operator</th>
+                        <th class="text-center py-1">Tel</th>
+                        <th class="text-center py-1">Data</th>
+                        <th class="text-center py-1">Status</th>
+                        <th class="text-center py-1">Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for employee in employee_list_otm %}
+                    <tr>
+                        <td class="px-2 py-1 text-center">{{ employee.id }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.first_name }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.parent }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.type_muddat }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.operator }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.tel }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.date_added }}</td>
+                        <td class="px-2 py-1 text-center">
+                            
+                            <span class="badge bg-primary rounded-pill px-3">{{ employee.status }}</span> 
+                        
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-data" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">visibility</i>
+                            </button>
+                            {% if employee.status == 'Qaytish' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded update-data" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'SMS' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-sms" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Одобрено' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-summa" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            <button class="mdc-button mdc-button--raised p-1 icon-button mdc-ripple-upgraded view-summa" type="button" data-id="{{ employee.pk }}" title="View Details">
+                                <i class="material-icons mdc-button__icon">menu</i>
+                            </button>
+                            {% endif %}
+                            {% if employee.status == 'Shartnoma' and not edit_no %}
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded enter-shartnoma" type="button" data-id="{{ employee.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %} {% block ScriptBlock %}
+<script>
+    function myFunction(n) {
+        if (n == 1){
+            document.getElementById("content_all").style.display = "block";
+            document.getElementById("content_new").style.display = "none";
+            document.getElementById("content_r").style.display = "none";
+            document.getElementById("content_ot").style.display = "none";
+            document.getElementById("content_of").style.display = "none";
+            document.getElementById("content_otm").style.display = "none";
+        } else if (n == 2){
+            document.getElementById("content_all").style.display = "none";
+            document.getElementById("content_new").style.display = "block";
+            document.getElementById("content_r").style.display = "none";
+            document.getElementById("content_ot").style.display = "none";
+            document.getElementById("content_of").style.display = "none";
+            document.getElementById("content_otm").style.display = "none";
+        } else if (n == 3){
+            document.getElementById("content_all").style.display = "none";
+            document.getElementById("content_new").style.display = "none";
+            document.getElementById("content_r").style.display = "block";
+            document.getElementById("content_ot").style.display = "none";
+            document.getElementById("content_of").style.display = "none";
+            document.getElementById("content_otm").style.display = "none";
+        } else if (n == 4){
+            document.getElementById("content_all").style.display = "none";
+            document.getElementById("content_new").style.display = "none";
+            document.getElementById("content_r").style.display = "none";
+            document.getElementById("content_ot").style.display = "block";
+            document.getElementById("content_of").style.display = "none";
+            document.getElementById("content_otm").style.display = "none";
+        } else if (n == 5){
+            document.getElementById("content_all").style.display = "none";
+            document.getElementById("content_new").style.display = "none";
+            document.getElementById("content_r").style.display = "none";
+            document.getElementById("content_ot").style.display = "none";
+            document.getElementById("content_of").style.display = "block";
+            document.getElementById("content_otm").style.display = "none";
+        } else if (n == 6){
+            document.getElementById("content_all").style.display = "none";
+            document.getElementById("content_new").style.display = "none";
+            document.getElementById("content_r").style.display = "none";
+            document.getElementById("content_ot").style.display = "none";
+            document.getElementById("content_of").style.display = "none";
+            document.getElementById("content_otm").style.display = "block";
+        }
+
+        
+        
+        
+    }
+    $(function() {
+        $('#create_new').click(function() {
+            uni_modal("Add New Employee", "{% url 'manage_employees-page' %}", 'modal-lg')
+        })
+        $('.view-data').click(function() {
+            uni_modal("Employee Details", "{% url 'view-employee-page' %}?id=" + $(this).attr('data-id'), 'mid-large')
+        })
+        $('.update-data').click(function() {
+            uni_modal("Telefon Raqam Kiriting", "{% url 'ariza_tel' %}?id=" + $(this).attr('data-id'))
+        })
+
+        $('.enter-sms').click(function() {
+            uni_modal("SMS Codini kiriting", "{% url 'ariza_tel' %}?id=" + $(this).attr('data-id'))
+        })
+        $('.enter-shartnoma').click(function() {
+            uni_modal("Shartnomani Yuklab olib imzolab yuklang", "{% url 'enter_shartnoma' %}?id=" + $(this).attr('data-id'))
+        })
+        $('.enter-summa').click(function() {
+            uni_modal("Maxsulot Narxini kiriting", "{% url 'enter_summa' %}?id=" + $(this).attr('data-id'))
+        })
+        $('.view-summa').click(function() {
+            uni_modal("Maxsulot Narxini kiriting", "{% url 'view_summa' %}?id=" + $(this).attr('data-id'))
+        })
+    })
+
+    function delete_employee($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'delete-employee' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err)
+                alert_toast("An error occured.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("An error occured.", 'error');
+                    end_loader();
+                }
+            }
+        })
+    }
+</script>
+{% endblock ScriptBlock %}

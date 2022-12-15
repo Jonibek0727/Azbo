@@ -1,0 +1,122 @@
+{% extends "employee_information/base.html" %} {% block pageContent %}
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Dukonlar ro'yxati</h4>
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" id="create_new"><i class="material-icons mdc-button__icon">add</i><span> Add New</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="30%">
+                    <col width="30%">
+                    <col width="15%">
+                    <col width="20%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center py-1">ID</th>
+                        <th class="text-center py-1">Do‘kon nomi</th>
+                        <th class="text-center py-1">Derektor</th>
+                        <th class="text-center py-1">Tel_derector</th>
+                        <th class="text-center py-1">Tel_bugalter</th>
+                        <th class="text-center py-1">Inn</th>
+                        <th class="text-center py-1">Xisob_raqam</th>
+                        <th class="text-center py-1">gvohnoma</th>
+                        <th class="text-center py-1">Derector_pasporti</th>
+                        <th class="text-center py-1">Adress</th>
+                        <th class="text-center py-1">Foiz</th>
+                        <th class="text-center py-1">Status</th>
+                        <th class="text-center py-1">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for department in departments %}
+                    <tr>
+                        <td class="px-2 py-1 text-center">{{ department.id }}</td>
+                        <td class="px-2 py-1 text-start">{{ department.name }}</td>
+                        <td class="px-2 py-1 text-start">{{ department.user }}</td>
+                        <td class="px-2 py-1 text-start">{{ department.Tel_derector }}</td>
+                        <td class="px-2 py-1 text-start">{{ department.Tel_bugalter }}</td>
+                        <td class="px-2 py-1 text-start">{{ department.Inn }}</td>
+                        <td class="px-2 py-1 text-start">{{ department.Xisob_raqam }}</td>
+                        <td class="px-2 py-1 text-start"><a href="{% if department.gvohnoma.url %}{{ department.gvohnoma.url }}{% endif %}" download><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+                          </svg></a></td>
+                        <td class="px-2 py-1 text-start"><a href="{% if department.Derector_pasporti.url %}{{ department.Derector_pasporti.url }}{% endif %}" download><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+                          </svg></a></td>
+                        <td class="px-2 py-1 text-start">{{ department.Adresss }}</td>
+                        <td class="px-2 py-1 text-start">{{ department.foiz_narx }}%</td>
+                        
+                        
+                        <td class="px-2 py-1 text-center">
+                            {% if department.status == 1 %}
+                            <span class="badge bg-success rounded-pill px-3">Active</span> {% else %}
+                            <span class="badge bg-danger rounded-pill px-3">Inactive</span> {% endif %}
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded edit-data" type="button" data-id="{{ department.pk }}" title="Edit">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--danger mdc-ripple-upgraded delete-data" type="button" data-id="{{ department.pk }}" title="Delete">
+                                <i class="material-icons mdc-button__icon">deleteoutline</i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %} {% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#create_new').click(function() {
+            uni_modal("Add New Department", "{% url 'manage_departments-page' %}")
+        })
+        $('.edit-data').click(function() {
+            uni_modal("Edit Department", "{% url 'manage_departments-page' %}?id=" + $(this).attr('data-id'))
+        })
+        $('.delete-data').click(function() {
+            _conf("Are you sure to delete this department?", "delete_department", [$(this).attr('data-id')])
+        })
+    })
+
+    function delete_department($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'delete-department' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err)
+                alert_toast("An error occured.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("An error occured.", 'error');
+                    end_loader();
+                }
+            }
+        })
+    }
+</script>
+{% endblock ScriptBlock %}

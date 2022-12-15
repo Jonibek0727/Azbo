@@ -1,0 +1,127 @@
+<div class="container-fluid">
+    <form action="" id="department-form">
+        <input type="hidden" name="id" value="{% if department.pk %}{{department.pk}}{% endif %}">
+        <div class="form-group mb-3">
+            <label for="name" class="control-label">Department Name</label>
+            <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" value="{% if department.name %}{{department.name}}{% endif %}" required>
+        </div>
+        {% if department.user %}
+        <div class="form-group mb-3">
+            <select name="User" id="User" class="form-control form-control-sm rounded-0" required>
+                {% for i in User %}
+                    <option value="{{ i.id }}" {% if department.user.id == i.id %} selected {% endif %} >{{ i }}</option>
+                {% endfor %}
+            </select>
+        </div> 
+        {% else %}
+        <div class="form-group mb-3">
+            <select name="User" id="User" class="form-control form-control-sm rounded-0" required>
+                {% for i in User %}
+                    <option value="{{ i.id }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+        </div>    
+        {% endif %}
+        <div class="form-group mb-3">
+            <label for="Tel_derector" class="control-label">Tel_derector</label>
+            <input name="Tel_derector" id="Tel_derector" class="form-control form-control-sm rounded-0" value="{% if department.Tel_derector %}{{department.Tel_derector}}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="Tel_bugalter" class="control-label">Tel_bugalter</label>
+            <input name="Tel_bugalter" id="Tel_bugalter" class="form-control form-control-sm rounded-0" value="{% if department.Tel_bugalter %}{{department.Tel_bugalter}}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="Inn" class="control-label">Inn</label>
+            <input name="Inn" id="Inn" class="form-control form-control-sm rounded-0" value="{% if department.Inn %}{{department.Inn}}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="Xisob_raqam" class="control-label">Xisob_raqam</label>
+            <input name="Xisob_raqam" id="Xisob_raqam" class="form-control form-control-sm rounded-0" value="{% if department.Xisob_raqam %}{{department.Xisob_raqam}}{% endif %}" required>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="gvohnoma" class="control-label">gvohnoma</label>
+            <input type="file" name="gvohnoma" id="gvohnoma" class="form-control form-control-sm rounded-0" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="Derector_pasporti" class="control-label">Derector_pasporti</label>
+            <input type="file" name="Derector_pasporti" id="Derector_pasporti" class="form-control form-control-sm rounded-0" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="Adresss" class="control-label">Adress</label>
+            <input name="Adresss" id="Adresss" class="form-control form-control-sm rounded-0" value="{% if department.Adresss %}{{department.Adresss}}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="foiz_narx" class="control-label">Foiz</label>
+            <input name="foiz_narx" id="foiz_narx" class="form-control form-control-sm rounded-0" value="{% if department.foiz_narx %}{{department.foiz_narx}}{% endif %}" required>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="status" class="control-label">Status</label>
+            <select name="status" id="status" class="form-control form-control-sm rounded-0" required>
+            {% if department.status and department.status == 1 %}
+            <option value="1" selected>Active</option>
+            {% else %}
+            <option value="1">Active</option>
+            {% endif %}
+
+            {% if department.status and department.status == 0 %}
+            <option value="0" selected>Inactive</option>
+            {% else %}
+            <option value="0">Inactive</option>
+            {% endif %}
+        </select>
+        </div>
+    </form>
+</div>
+<script>
+    $(function() {
+        $('#department-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'save-department-page' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    alert_toast("An error occured", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.text(resp.msg)
+                    } else {
+                        el.text("An error occured", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal").scrollTop(0);
+                    end_loader()
+                }
+            })
+        })
+    })
+</script>

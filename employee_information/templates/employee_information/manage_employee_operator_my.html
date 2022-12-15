@@ -1,0 +1,236 @@
+<div class="container-fluid">
+    <form action="" id="employee-form">
+        <input type="hidden" name="id" value="{% if employee.pk %}{{employee.pk}}{% endif %}">
+        <div class="row">
+            {% if employee.status == 'Новый' or employee.status == 'Рассматривается' or employee.status == 'Qaytish' or employee.status == 'SMS' %}
+
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="first_name" class="control-label">First Name</label>
+                    <h3>{% if employee.first_name %}{{employee.first_name}}{% endif %}</h3>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="tel" class="control-label">Phone</label>
+                    <h3>{% if employee.tel %}{{employee.tel}}{% endif %}</h3>
+                </div>
+                
+                
+                <div class="form-group mb-3">
+                    <label for="data_user" class="control-label">Birthday</label>
+                    <h3>{% if employee.data_user %}{{ employee.data_user|date:'Y-m-d' }}{% endif %}</h3>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="pasport_photo" class="control-label">Pasport Photo</label>
+                    <a href="{% if employee.pasport_photo.url %}{{employee.pasport_photo.url}}{% endif %}" download><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+                      </svg></a>
+                </div>
+                
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="last_name" class="control-label">Last Name</label>
+                    <h3>{% if employee.last_name %}{{employee.last_name}}{% endif %}</h3>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="type_muddat" class="control-label">Muddat</label>
+                    <h3>{% if employee.type_muddat %}{{employee.type_muddat}}{% endif %} - oy</h3>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="pasport_seria" class="control-label">Pasport Seria</label>
+                    <h3>{% if employee.pasport_seria %}{{employee.pasport_seria}}{% endif %}</h3>
+                </div>
+                <div class="form-group mb-3">
+                    <button class="mdc-button mdc-button--raised p-2 m-3 icon-button mdc-ripple-upgraded ariza_qaytish" type="button" data-id="{{ employee.pk }}" title="Edit">
+                        Qaytish
+                    </button>
+                </div>
+            
+
+            </div>
+
+        {% elif employee.status == 'SMS_send' %}
+        <div class="form-group mb-3">
+            <label for="tel" class="control-label">SMS</label>
+            <h3>{% if employee.code_pasport %}{{employee.code_pasport}}{% endif %}</h3>
+        </div>
+        <div class="form-group mb-3">
+            <button class="mdc-button mdc-button--raised p-2 icon-button mdc-ripple-upgraded ariza_not" type="button" data-id="{{ employee.pk }}" title="Edit">
+                Отказано
+            </button>
+            <button class="mdc-button mdc-button--raised p-2 icon-button mdc-ripple-upgraded summa_limet" type="button" data-id="{{ employee.pk }}" title="Edit">
+                Limit Summa
+            </button>
+        </div>
+        {% elif employee.status == 'Оформлено' %}
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label for="summa_limet" class="control-label">Summa Limet</label>
+                <h3>{% if employee.summa_limet %}{{employee.summa_limet}}{% endif %}</h3>
+            </div>
+            <div class="form-group mb-3">
+                <label for="maxshulot_summasi" class="control-label">Maxshulot narxini</label>
+                <h3>{% if employee.maxshulot_summasi %}{{employee.maxshulot_summasi}}{% endif %}</h3>
+            </div>
+            <div class="form-group mb-3">
+                <label for="yechiladigon_summa" class="control-label">Yechiladigon Summa</label>
+                <h3>{% if employee.yechiladigon_summa %}{{employee.yechiladigon_summa}}{% endif %}</h3>
+            </div>
+            <div class="form-group mb-3">
+                <label for="oylik_tolov" class="control-label">Oylik Tolov</label>
+                <h3>{% if employee.oylik_tolov %}{{employee.oylik_tolov}}{% endif %}</h3>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label for="shartnoma_asli1" class="control-label">Shartnoma 1</label>
+                <input type="file" name="shartnoma_asli1" id="shartnoma_asli1" class="form-control form-control-sm rounded-0" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="shartnoma_asli2" class="control-label">Shartnoma 2</label>
+                <input type="file" name="shartnoma_asli2" id="shartnoma_asli2" class="form-control form-control-sm rounded-0"required>
+            </div>
+        </div>
+        
+        {% endif %}
+    </form>
+</div>
+<script>
+    $(function() {
+        $('#employee-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            console.log('{{ employee.status }}');
+            if ( '{{ employee.status }}' == 'Рассматривается'){
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'save-employee-sms' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                
+                error: err => {
+                    console.log(err)
+                    alert_toast("An error occured", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.text(resp.msg)
+                    } else {
+                        el.text("An error occured", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal").scrollTop(0);
+                    end_loader()
+                }
+            })
+
+        } else if ('{{ employee.status }}' == 'Оформлено'){
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'send_shartnoma' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                
+                error: err => {
+                    console.log(err)
+                    alert_toast("An error occured", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.text(resp.msg)
+                    } else {
+                        el.text("An error occured", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal").scrollTop(0);
+                    end_loader()
+                }
+            })
+        }
+
+        })
+    })
+
+    $(function() {
+        $('.ariza_not').click(function() {
+            _conf("Siz bu arizani Отказ qilasizmi", "ariza_not", [$(this).attr('data-id')])
+        })
+        $('.ariza_qaytish').click(function() {
+            uni_modal("Siz Arizaga Commit yozing", "{% url 'ariza_qaytish' %}?id=" + $(this).attr('data-id'))
+        })
+        $('.summa_limet').click(function() {
+            uni_modal("limit Summasini kiriting", "{% url 'summa_limet' %}?id=" + $(this).attr('data-id'))
+        })
+    })
+
+
+    function ariza_not($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'ariza_not' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err)
+                alert_toast("An error occured.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("An error occured.", 'error');
+                    end_loader();
+                }
+            }
+        })
+    }
+
+    
+</script>

@@ -1,0 +1,152 @@
+<div class="container-fluid">
+    <form action="" id="employee-form">
+        <input type="hidden" name="id" value="{% if employee.pk %}{{employee.pk}}{% endif %}">
+        <div class="row">
+            <div class="col-md-6">
+                {% if employee.status == 'Одобрено' %}
+                <div class="form-group mb-3">
+                    <label for="summa_limet" class="control-label">Summa Limet</label>
+                    <h3>{% if employee.summa_limet %}{{employee.summa_limet}}{% endif %}</h3>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="maxshulot_summasi" class="control-label">Maxshulot narxini</label>
+                    <h3>{% if employee.maxshulot_summasi %}{{employee.maxshulot_summasi}}{% endif %}</h3>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="yechiladigon_summa" class="control-label">Yechiladigon Summa</label>
+                    <h3>{% if employee.yechiladigon_summa %}{{employee.yechiladigon_summa}}{% endif %}</h3>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="oylik_tolov" class="control-label">Oylik Tolov</label>
+                    <h3>{% if employee.oylik_tolov %}{{employee.oylik_tolov}}{% endif %}</h3>
+                </div>
+                <div class="form-group mb-3">
+                    <button class="mdc-button mdc-button--raised p-2 icon-button mdc-ripple-upgraded ariza_not" type="button" data-id="{{ employee.pk }}" title="Edit">
+                        Отменено
+                    </button>
+                    <button class="mdc-button mdc-button--raised p-2 icon-button mdc-ripple-upgraded ariza_ok" type="button" data-id="{{ employee.pk }}" title="Edit">
+                        OK
+                    </button>
+                </div>
+                {% endif %}
+
+            </div>
+    </form>
+</div>
+<script>
+    
+    $(function() {
+        $('#employee-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'maxshulot_summasi' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    alert_toast("An error occured", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.text(resp.msg)
+                    } else {
+                        el.text("An error occured", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal").scrollTop(0);
+                    end_loader()
+                }
+            })
+        })
+    })
+    $('.ariza_not').click(function() {
+            _conf("Siz bu arizani Отказ qilasizmi", "ariza_not", [$(this).attr('data-id')])
+        })
+
+        function ariza_not($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'ariza_not_m' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err)
+                alert_toast("An error occured.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("An error occured.", 'error');
+                    end_loader();
+                }
+            }
+        })
+    }
+
+
+
+    $('.ariza_ok').click(function() {
+            _conf("Siz bu arizani qabul qilasizmi", "ariza_ok", [$(this).attr('data-id')])
+        })
+
+        function ariza_ok($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'ariza_ok' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err)
+                alert_toast("An error occured.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("An error occured.", 'error');
+                    end_loader();
+                }
+            }
+        })
+    }
+</script>

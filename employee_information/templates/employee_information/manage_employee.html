@@ -1,0 +1,104 @@
+<div class="container-fluid">
+    <form action="" id="employee-form">
+        <input type="hidden" name="id" value="{% if employee.pk %}{{employee.pk}}{% endif %}">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="first_name" class="control-label">First Name</label>
+                    <input type="text" name="first_name" id="first_name" class="form-control form-control-sm rounded-0" value="{% if employee.first_name %}{{employee.first_name}}{% endif %}" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="last_name" class="control-label">Last Name</label>
+                    <input type="text" name="last_name" id="last_name" class="form-control form-control-sm rounded-0" value="{% if employee.last_name %}{{employee.last_name}}{% endif %}" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="tel" class="control-label">Phone</label>
+                    <input type="text" name="tel" id="tel" class="form-control form-control-sm rounded-0" value="{% if employee.tel %}{{employee.tel}}{% endif %}">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="type_muddat" class="control-label">Muddat</label>
+                    <select name="type_muddat" id="type_muddat" class="form-select form-select-sm rounded-0" required>
+                        {% if not employee.type_muddat %}
+                        <option value="1" disabled selected>Please Select Here</option>
+                        {% else %}
+                        <option value="1" disabled>Please Select Here</option>
+                        {% endif %}
+                        {% for muddat in muddat %}
+                            {% if employee.type_muddat and employee.type_muddat == muddat.id %}
+                            <option value="{{ muddat.id }}" selected>{{ muddat.muddat }}</option>
+                            {% else %}
+                            <option value="{{ muddat.id }}">{{ muddat.muddat }}</option>
+                            {% endif %}
+                        {% endfor %}
+
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="pasport_seria" class="control-label">Pasport Seria</label>
+                    <input type="text" name="pasport_seria" id="pasport_seria" class="form-control form-control-sm rounded-0" value="{% if employee.pasport_seria %}{{employee.pasport_seria}}{% endif %}">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="data_user" class="control-label">Birthday</label>
+                    <input type="date" name="data_user" id="data_user" class="form-control form-control-sm rounded-0" value="{% if employee.data_user %}{{ employee.data_user|date:'Y-m-d' }}{% endif %}" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="pasport_photo" class="control-label">Pasport Photo</label>
+                    <input type="file" name="pasport_photo" id="pasport_photo" class="form-control form-control-sm rounded-0" value="{% if employee.pasport_photo.url %}{{employee.pasport_photo.url}}{% endif %}" >
+                </div>
+                
+            </div>
+            
+        </div>
+    </form>
+</div>
+<script>
+    $(function() {
+        $('#employee-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'save-employee-page' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    alert_toast("An error occured", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.text(resp.msg)
+                    } else {
+                        el.text("An error occured", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal").scrollTop(0);
+                    end_loader()
+                }
+            })
+        })
+    })
+</script>
